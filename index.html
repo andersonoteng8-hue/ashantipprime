@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashanti Prime TV</title>
+    <link rel="icon" type="image/png" href="favicon32.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="icon-128.png">
+    <!-- Main favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon32.png">
+
+<!-- Fallback / Windows -->
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+
+<!-- Apple / iOS (you already have this) -->
+<link rel="apple-touch-icon" sizes="128x128" href="icon-128.png">
+
+<!-- High-quality / PWA -->
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo img {
+  width: 120px;          /* adjust size as you want */
+  height: 120px;         /* must be same as width */
+  border-radius: 50%;
+  object-fit: cover;     /* prevents stretching */
+}
+        
+        .logo:hover {
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 0 10px #00ffff);
+        }
+        .social-media {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .social-media a {
+            color: #00ffff;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+        .social-media a:hover {
+            color: #ffff00;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+        }
+        .social-media svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        nav a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        nav a:hover {
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffff, #ffff00);
+            transition: width 0.3s ease;
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        section {
+            padding: 5rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(45deg, #00ffff, #ffff00, #00ffa2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 0, 0.8), 0 0 40px rgba(255, 255, 0, 0.3); }
+        }
+        .live-tv {
+            text-align: center;
+        }
+        .live-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 16/9;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .live-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #ff0000, #ff4500);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 10;
+            animation: pulse 1s infinite;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .live-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .schedule {
+            padding: 2rem;
+        }
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 1rem;
+        }
+        .schedule-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            scroll-snap-align: start;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .schedule-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(9, 210, 70, 0.3);
+            border-color: #0fb95b;
+        }
+        .schedule-card h3 {
+            color: #ffff00;
+            margin-bottom: 0.5rem;
+        }
+        .schedule-card p {
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+        .schedule-card .time {
+            color: #00ffff;
+            font-weight: bold;
+        }
+        .video-gallery {
+            padding: 2rem;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .video-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgb(223, 202, 9);
+            border-color: #15ff00;
+        }
+        .video-card iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            section {
+                padding: 4rem 1rem 1rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            .schedule-grid {
+                grid-template-columns: 1fr;
+                overflow-x: scroll;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+   
+    <header>
+        <div class="logo-container">
+            <div class="logo">
+                <img src="image/2.jpeg" alt="TV Station Logo">
+            </div>
+            <div class="social-media">
+                <a href="https://www.facebook.com/ashantiprimeTV" target="_blank" title="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://www.youtube.com/@ashantiprimeTV " target="_blank" title="YouTube">
+                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://x.com/ashantiprimeTV" target="_blank" title="X">
+                    <svg viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                </a>
+                <a href="https://www.tiktok.com/@ashantiprimeTV" target="_blank" title="TikTok">
+                    <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                </a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#live-tv">Live TV</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+        </nav>
+    </header>
+
+   <section id="live-tv" class="live-tv fade-in">
+  <h2 class="floating">LIVE TV STREAM</h2>
+
+  <div class="live-container">
+    <div class="live-badge">LIVE</div>
+
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed/live_stream?channel=UCuqZEiuwHiy2XMvbMF0-ssQ&autoplay=1&mute=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+</section>
+
+    <section id="schedule" class="schedule fade-in">
+        <h2 class="floating">PROGRAM SCHEDULE</h2>
+        <div class="schedule-grid">
+            <div class="schedule-card">
+                <h3>Ashanti Prime News</h3>
+                <p>Host: Miss Nafsat</p>
+                <p class="time">12:00 PM – 1:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>Prime Sport</h3>
+                <p>Host: Emmanuel Kusi </p>
+                <p class="time">1:00 PM – 2:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>My Worship My Sacrifice</h3>
+                <p>Host: M.K Louis </p>
+                <p class="time">10:00 AM – 12:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>Prime Trendz</h3>
+                <p>Host: Ohemaa</p>
+                <p class="time">4:30 PM – 5:30 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>Keep me anonymous</h3>
+                <p>Host:Joel Opoku</p>
+                <p class="time">6:00 PM – 7:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>Prayer Line connect</h3>
+                <p>Host: ProPhet Samuel Appiah</p>
+                <p class="time">10:00 PM – 11:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>campus Experience</h3>
+                <p>Host: Kwabena Yeboah</p>
+                <p class="time">Fri:6:00 PM – 8:00 PM</p>
+            </div>
+            <div class="schedule-card">
+                <h3>Queens Table</h3>
+                <p>Host: Francisca</p>
+                <p class="time">Sat:7:00 PM – 8:30 PM</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="video-gallery fade-in">
+        <h2 class="floating">VIDEO GALLERY</h2>
+        <div class="video-grid">
+            <div class="video-card">
+               <iframe width="560" height="315" src="https://www.youtube.com/embed/Qgs5QQb2f7g?si=y_ER8SuonpxxWfN8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/rjTq5h2olwI?si=aoPJ8nhmlQsMaose" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+            </div>
+            <div class="video-card">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/OmZ5Mh1SVPU?si=N3MGI8reH59meF9_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/0ddEHFWVRXM?si=Yjaw0fV1N7BuaYfA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/KkI7keRvcy4?si=BuzTLg20j0A1fWLA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/QLxX6tVKd1U?si=QqXgLMXqfa8q0iCH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="video-card">
+               <iframe width="560" height="315" src="https://www.youtube.com/embed/ddJFLpp7_hI?si=51EjKwIWCaszZabD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Optional: Mute live video on load (if autoplay is enabled)
+        const liveIframe = document.querySelector('.live-container iframe');
+        if (liveIframe) {
+            liveIframe.addEventListener('load', () => {
+                // Note: YouTube autoplay with mute is handled in the iframe src
+            });
+        }
+    </script>
+<p>Stay tuned for the latest news, shows, and more.</p>
+        </div>
+    </section>
+ <section>
+     <h2>About Us</h2>
+        <p>Ashanti PrimeTV Station is dedicated to providing high-quality local news, entertainment, and community-focused programming. We strive to keep our viewers informed and entertained with a mix of news, sports, and lifestyle shows.</p>
+    </section>
+  
+  <footer>
+        <p style="text-align: center;">&copy;2025 Ashanti Prime TV. All rights reserved</p>
+</footer>
+</body>
+</html>
